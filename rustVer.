@@ -1,0 +1,63 @@
+use std::io::{self, Write};
+
+struct BankAccount {
+    balance: f64,
+}
+
+impl BankAccount {
+    fn new() -> Self {
+        BankAccount { balance: 0.0 }
+    }
+
+    fn deposit(&mut self, amount: f64) {
+        self.balance += amount;
+    }
+
+    fn withdraw(&mut self, amount: f64) {
+        if self.balance >= amount {
+            self.balance -= amount;
+        } else {
+            println!("Insufficient funds.");
+        }
+    }
+
+    fn get_balance(&self) -> f64 {
+        self.balance
+    }
+}
+
+fn main() {
+    let mut account = BankAccount::new();
+
+    loop {
+        println!("1. Deposit");
+        println!("2. Withdraw");
+        println!("3. Check Balance");
+        println!("4. Exit");
+
+        let mut choice = String::new();
+        io::stdout().flush().unwrap();
+        io::stdin().read_line(&mut choice).unwrap();
+        let choice: u32 = choice.trim().parse().unwrap();
+
+        match choice {
+            1 => {
+                println!("Enter amount to deposit: ");
+                let mut amount = String::new();
+                io::stdin().read_line(&mut amount).unwrap();
+                let amount: f64 = amount.trim().parse().unwrap();
+                account.deposit(amount);
+            }
+            2 => {
+                println!("Enter amount to withdraw: ");
+                let mut amount = String::new();
+                io::stdin().read_line(&mut amount).unwrap();
+                let amount: f64 = amount.trim().parse().unwrap();
+                account.withdraw(amount);
+            }
+            3 => println!("Your balance is: ${}", account.get_balance()),
+            4 => break,
+            _ => println!("Invalid choice, please try again."),
+        }
+    }
+}
